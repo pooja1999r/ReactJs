@@ -1,15 +1,18 @@
 import React,{ Component } from "react";
-import { Navbar, NavbarBrand, Nav, NavbarToggler,Collapse,NavItem } from 'reactstrap';
+import { Navbar, NavbarBrand, Nav, NavbarToggler,Collapse,NavItem,Button,Form ,ModalHeader,Modal ,ModalBody, FormGroup, Label, Input} from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 
 class Header extends Component{
     constructor(props){
         super(props);
         this.state={
-            isNavOpen:false
+            isNavOpen:false,
+            isModalOpan :false
         };
         // in order to make use of method  toggleNav  within jsx we need to bind this in our code for js in strict mode
         this.toggleNav=this.toggleNav.bind(this);
+        this.handleLogin=this.handleLogin.bind(this);
+        this.toggleModal=this.toggleModal.bind(this);
         // this toggleNav now avaliable 
         // for all function we have to bind them in constructor by above syntex
     }
@@ -18,6 +21,25 @@ class Header extends Component{
            isNavOpen:!this.state.isNaveOpen 
         });
     }
+
+    // toggle modal
+    toggleModal(){
+        this.setState({
+           isModalOpen:!this.state.isModalOpen 
+        });
+
+    }
+
+    // handleLogin for uncontrolled form
+    handleLogin(event){
+        // close togglemodal
+        this.toggleModal();
+        alert("Username : " + this.username.value + "password : "+ this.password.value +
+         "Remember me : " + this.remember.checked);
+         event.preventDefault();
+
+    }
+
     render(){
         return(
             // <></> react fragment(short form sentex of react fragment)  used to bunch a group of elements amd return it
@@ -59,6 +81,13 @@ class Header extends Component{
                             </NavLink>
                         </NavItem>
                     </Nav>
+                    <Nav className="ml-auto" navbar>
+                        <NavItem>
+                            <Button outline onClick={this.toggleModal}>
+                                <span className="fa fa-sign-in fa-lg"></span>
+                            </Button>
+                        </NavItem>
+                    </Nav>
                     </Collapse>
                 </div>
             </Navbar>
@@ -72,6 +101,32 @@ class Header extends Component{
                     </div>
                 </div>
             </div>
+            <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
+                <ModalHeader toggle={this.toggleModal}>Login</ModalHeader>
+                <ModalBody>
+                     <Form onSubmit={this.handleLogin}>
+                         <FormGroup>
+                             <Label htmlFor="username">Username</Label>
+                             <Input type="text" id="username" name="username" 
+                             innerRef={(input) => this.username = input} />
+                             {/* react strap also use ref that's why we use innerRef to get values from form (extracting inforation from dom and store them and use them form our react app*/}
+                         </FormGroup>
+                         <FormGroup>
+                             <Label htmlFor="password">Password</Label>
+                             <Input type="password" id="password" name="password"
+                             innerRef={(input) => this.password = input} />
+                         </FormGroup>
+                         <FormGroup check>
+                             <Label check>
+                                 <Input type="checkbox" name="remember"
+                                 innerRef={(input) => this.remember = input} />
+                                 Remember me
+                             </Label>
+                         </FormGroup>
+                         <Button type="submit" value="submit" color="primary">Login</Button>
+                     </Form>
+                </ModalBody>
+            </Modal>
              </>
         );
     }

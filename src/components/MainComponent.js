@@ -3,6 +3,7 @@ import React ,{ Component } from 'react';
 import Home from './HomeComponent';
 import Menu from './MenuComponent';
 import Contact from './ContactComponent';
+import About from './AboutComponent';
 import DishDetail from './DishdetailComponent ';
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
@@ -42,6 +43,22 @@ class Main extends Component {
       );
     }
 
+    // functional component when some dish is clicked from menu component route pass 3 props match,location ,hostory ,we use only match object
+     const DishWithId= ({match}) =>{
+       return(
+        //  filter return array there so we use [0] and parseInt return integer of string with base specified (here 10)
+            <DishDetail dish={this.state.dishes.filter((dish)=>dish.id === parseInt(match.params.dishId,10))[0]}
+                        comments ={this.state.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))}
+            />
+       );
+     }
+
+     const AboutInfo = () =>{
+       return(
+         <About leaders = {this.state.leaders} />
+       );
+     }
+
       return (
     <div>
         <Header />
@@ -55,7 +72,9 @@ class Main extends Component {
              <Route exact path="/menu" component={()=> <Menu dishes={this.state.dishes} />} />
              {/* <Route path="/menu"> <Menu dishes={this.state.dishes} /> </Route> */}
              
+              <Route path="/menu/:dishId" component={DishWithId} />
               <Route exact path="/contactus" component={Contact}  />
+              <Route path="/aboutus" component={AboutInfo} />
 
              {/* default path if route does not match any of these above */}
              {/* <Navigate to="/home" /> */}
