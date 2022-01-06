@@ -19,7 +19,7 @@ import {Link}  from 'react-router-dom';
    function RenderDishComment({comments}){
             const comment= comments.map((comm)=>{
                 return(
-                    <div key={comm.id} >
+                    <div key={comm.id} className="ml-3" >
                                   <p>{comm.comment} </p>  
                                  <p> {comm.author} {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comm.date)))}  </p> 
                     </div>
@@ -29,7 +29,7 @@ import {Link}  from 'react-router-dom';
             return(
                 <div className="col-12 col-md-5 m-1">
                 <Card>
-                       <h4>comments</h4>
+                       <h4 className="ml-3">comments</h4>
                        {comment}
                 </Card>
                 </div>

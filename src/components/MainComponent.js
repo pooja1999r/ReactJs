@@ -7,22 +7,35 @@ import About from './AboutComponent';
 import DishDetail from './DishdetailComponent ';
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
-import { DISHES } from '../shared/dishes';
-import { COMMENTS } from '../shared/comments';
-import { PROMOTIONS } from '../shared/promotions';
-import { LEADERS } from '../shared/leaders';
-import { Switch, Route, Redirect } from 'react-router-dom';
+// import { DISHES } from '../shared/dishes';
+// import { COMMENTS } from '../shared/comments';
+// import { PROMOTIONS } from '../shared/promotions';
+// import { LEADERS } from '../shared/leaders';
+import { Switch, Route, Redirect ,withRouter } from 'react-router-dom';
+// to connect our react to redux 
+import { connect } from 'react-redux';
+
+// map redux store state into props that will available to my component
+const mapStateToStore = state =>{
+  return{
+      dishes : state.dishes ,
+      comments : state.comments ,
+      promotions : state.promotions,
+      leaders :state.leaders
+  }
+}
+
 
 class Main extends Component {
   constructor(props){
     super(props);
-    this.state={
-      dishes :DISHES,
-      comments : COMMENTS,
-      promotions: PROMOTIONS,
-      leaders : LEADERS
+    // this.state={
+    //   dishes :DISHES,
+    //   comments : COMMENTS,
+    //   promotions: PROMOTIONS,
+    //   leaders : LEADERS
       // selectedDish:null
-    };
+    // };
   } 
 
 //   onDishSelect(dishId){
@@ -36,9 +49,9 @@ class Main extends Component {
     const HomePage= ()=>{
       return(
         // filter return an array s0 we select first element 
-        <Home dish={this.state.dishes.filter((dish)=>dish.featured)[0]}
-              promotion={this.state.promotions.filter((promo)=>promo.featured)[0]}
-              leader={this.state.leaders.filter((leader)=>leader.featured)[0]}
+        <Home dish={this.props.dishes.filter((dish)=>dish.featured)[0]}
+              promotion={this.props.promotions.filter((promo)=>promo.featured)[0]}
+              leader={this.props.leaders.filter((leader)=>leader.featured)[0]}
          />
       );
     }
@@ -47,15 +60,15 @@ class Main extends Component {
      const DishWithId= ({match}) =>{
        return(
         //  filter return array there so we use [0] and parseInt return integer of string with base specified (here 10)
-            <DishDetail dish={this.state.dishes.filter((dish)=>dish.id === parseInt(match.params.dishId,10))[0]}
-                        comments ={this.state.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))}
+            <DishDetail dish={this.props.dishes.filter((dish)=>dish.id === parseInt(match.params.dishId,10))[0]}
+                        comments ={this.props.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))}
             />
        );
      }
 
      const AboutInfo = () =>{
        return(
-         <About leaders = {this.state.leaders} />
+         <About leaders = {this.props.leaders} />
        );
      }
 
@@ -69,7 +82,7 @@ class Main extends Component {
              {/* use exact because DishdetailComponent have same path  which start with /Menu that's why we use exact path here*/}
               {/* if path match but we have to pass some inforamation(props) from main component so we use function and return some information */}
               {/* one we to pass props or define functional component */}
-             <Route exact path="/menu" component={()=> <Menu dishes={this.state.dishes} />} />
+             <Route exact path="/menu" component={()=> <Menu dishes={this.props.dishes} />} />
              {/* <Route path="/menu"> <Menu dishes={this.state.dishes} /> </Route> */}
              
               <Route path="/menu/:dishId" component={DishWithId} />
@@ -88,4 +101,6 @@ class Main extends Component {
 }
 
 }
-export default Main;
+// to connect props to redux store we wrap this main by connect , (connect(mapStateToProps)(Main))
+// in order to use router we surround it by withRouter( (connect(mapStateToProps)(Main)))
+export default withRouter((connect( mapStateToStore)(Main)));

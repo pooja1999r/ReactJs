@@ -27,7 +27,6 @@ class Header extends Component{
         this.setState({
            isModalOpen:!this.state.isModalOpen 
         });
-
     }
 
     // handleLogin for uncontrolled form
@@ -37,7 +36,6 @@ class Header extends Component{
         alert("Username : " + this.username.value + "password : "+ this.password.value +
          "Remember me : " + this.remember.checked);
          event.preventDefault();
-
     }
 
     render(){
