@@ -7,6 +7,7 @@ import About from './AboutComponent';
 import DishDetail from './DishdetailComponent ';
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
+import { addComment , fetchDishes } from '../redux/ActionCreators';
 // import { DISHES } from '../shared/dishes';
 // import { COMMENTS } from '../shared/comments';
 // import { PROMOTIONS } from '../shared/promotions';
@@ -16,7 +17,7 @@ import { Switch, Route, Redirect ,withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 // map redux store state into props that will available to my component
-const mapStateToStore = state =>{
+const mapStateToProps = state =>{
   return{
       dishes : state.dishes ,
       comments : state.comments ,
@@ -25,10 +26,17 @@ const mapStateToStore = state =>{
   }
 }
 
+const mapDispatchToProps = dispatch => ({
+  
+  addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment)),
+  fetchDishes: ()=> {dispatch(fetchDishes())} 
+});
+
 
 class Main extends Component {
   constructor(props){
     super(props);
+    
     // this.state={
     //   dishes :DISHES,
     //   comments : COMMENTS,
@@ -37,6 +45,11 @@ class Main extends Component {
       // selectedDish:null
     // };
   } 
+
+  // every time when component mount
+  componentDidMount() {
+    this.props.fetchDishes();
+  }
 
 //   onDishSelect(dishId){
 //     // chenge state 
@@ -49,7 +62,9 @@ class Main extends Component {
     const HomePage= ()=>{
       return(
         // filter return an array s0 we select first element 
-        <Home dish={this.props.dishes.filter((dish)=>dish.featured)[0]}
+        <Home dish={this.props.dishes.dishes.filter((dish)=>dish.featured)[0]}
+              dishesLoading={this.props.dishes.isLoading}
+              dishesErrMess={this.props.dishes.errMess}
               promotion={this.props.promotions.filter((promo)=>promo.featured)[0]}
               leader={this.props.leaders.filter((leader)=>leader.featured)[0]}
          />
@@ -60,8 +75,11 @@ class Main extends Component {
      const DishWithId= ({match}) =>{
        return(
         //  filter return array there so we use [0] and parseInt return integer of string with base specified (here 10)
-            <DishDetail dish={this.props.dishes.filter((dish)=>dish.id === parseInt(match.params.dishId,10))[0]}
+            <DishDetail dish={this.props.dishes.dishes.filter((dish)=>dish.id === parseInt(match.params.dishId,10))[0]}
+                         isLoading={this.props.dishes.isLoading}
+                         errMess={this.props.dishes.errMess}
                         comments ={this.props.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))}
+                        addComment={this.props.addComment}
             />
        );
      }
@@ -86,7 +104,7 @@ class Main extends Component {
              {/* <Route path="/menu"> <Menu dishes={this.state.dishes} /> </Route> */}
              
               <Route path="/menu/:dishId" component={DishWithId} />
-              <Route exact path="/contactus" component={Contact}  />
+              <Route exact path="/contactus" component={() => <Contact />}  />
               <Route path="/aboutus" component={AboutInfo} />
 
              {/* default path if route does not match any of these above */}
@@ -103,4 +121,4 @@ class Main extends Component {
 }
 // to connect props to redux store we wrap this main by connect , (connect(mapStateToProps)(Main))
 // in order to use router we surround it by withRouter( (connect(mapStateToProps)(Main)))
-export default withRouter((connect( mapStateToStore)(Main)));
+export default withRouter((connect(mapStateToProps, mapDispatchToProps)(Main)));
