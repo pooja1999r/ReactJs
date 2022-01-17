@@ -28,7 +28,7 @@ class CommentForm extends Component {
     handleCommentFormSubmit(values) {
         // console.log("Current State is: " + JSON.stringify(values));
         // alert("Current State is: " + JSON.stringify(values));
-        this.props.addComment(this.props.dishId,values.rating,values.author,values.comment)
+        this.props.postComment(this.props.dishId,values.rating,values.author,values.comment)
        this.toggleCommentFormModal();
        return false;
 
@@ -272,7 +272,7 @@ function RenderDish({dish}){ //dish comes as a props hear that's why we write li
             ); 
     }  
    
-   function RenderDishComment({comments,addcomment,dishId}){  
+   function RenderDishComment({comments,postComment,dishId}){  
         // const myRef = React.createRef();
             const comment= comments.map((comm)=>{
                 return(
@@ -289,7 +289,7 @@ function RenderDish({dish}){ //dish comes as a props hear that's why we write li
                        <h4 className="ml-3">comments</h4>
                        {comment}
                           
-                       <CommentForm addComment={addcomment} dishId={dishId} />
+                       <CommentForm postComment={postComment} dishId={dishId} />
                 </Card>
                 </div>
             );
@@ -429,7 +429,7 @@ function RenderDish({dish}){ //dish comes as a props hear that's why we write li
                  </div>
                 <div className="row">
                   <RenderDish dish={props.dish} />
-                  <RenderDishComment comments={props.comments} addcomment ={props.addComment}  dishId={props.dish.id}/>
+                  <RenderDishComment comments={props.comments} postComment ={props.postComment}  dishId={props.dish.id}/>
                     
                 </div>
                 
