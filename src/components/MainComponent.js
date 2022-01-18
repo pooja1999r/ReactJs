@@ -16,6 +16,8 @@ import { actions } from 'react-redux-form';
 import { Switch, Route, Redirect ,withRouter } from 'react-router-dom';
 // to connect our react to redux 
 import { connect } from 'react-redux';
+//  for react animation
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 // map redux store state into props that will available to my component
 const mapStateToProps = state =>{
@@ -103,6 +105,8 @@ class Main extends Component {
       return (
     <div>
         <Header />
+        <TransitionGroup>
+        <CSSTransition key={this.props.location.key} classNames="page" timeout={300}>
         <Switch>
              <Route path="/home" component={HomePage} />
              {/* <Route path="/home"> <Home /> </Route> */}
@@ -121,6 +125,8 @@ class Main extends Component {
              {/* <Navigate to="/home" /> */}
              <Redirect to='/home' />
         </Switch>
+        </CSSTransition>
+        </TransitionGroup>
         {/* <Menu dishes={this.state.dishes} onClick={(dishId)=>this.onDishSelect(dishId)}/> */}
         {/* <DishDetail dish={this.state.dishes.filter((dish) => dish.id === this.state.selectedDish)[0]} /> */}
         <Footer />
